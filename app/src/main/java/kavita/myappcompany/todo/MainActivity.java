@@ -13,9 +13,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -24,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<String> notes = new ArrayList<>();
     static ArrayAdapter arrayAdapter;
     ImageView imageView;
+FloatingActionButton floatingActionButton;
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -35,13 +43,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected( MenuItem item) {
+
+
+
         super.onOptionsItemSelected(item);
 
         if (item.getItemId() == R.id.add_note) {
-            imageView=findViewById(R.id.imageView);
-            imageView.setVisibility(View.GONE);
-            // Going from MainActivity to NotesEditorActivity
+
+
             Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);
             startActivity(intent);
             return true;
@@ -54,6 +64,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+floatingActionButton=findViewById(R.id.add);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageView=findViewById(R.id.imageView);
+              imageView.setVisibility(View.GONE);
+                Toast.makeText(MainActivity.this, "click on menu to add", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
 
         ListView listView = findViewById(R.id.listView);
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
@@ -62,11 +85,13 @@ public class MainActivity extends AppCompatActivity {
         if (set == null) {
 
             notes.add("Example note");
+
         } else {
+
             notes = new ArrayList(set);
         }
 
-        // Using custom listView Provided by Android Studio
+
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, notes);
 
         listView.setAdapter(arrayAdapter);
@@ -75,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                // Going from MainActivity to NotesEditorActivity
+
                 Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);
                 intent.putExtra("noteId", i);
                 startActivity(intent);
@@ -88,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 final int itemToDelete = i;
-                // To delete the data from the App
+
                 new AlertDialog.Builder(MainActivity.this)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Are you sure?")
